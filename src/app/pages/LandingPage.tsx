@@ -89,7 +89,7 @@ export function LandingPage() {
                 Painter.
               </motion.p>
 
-              <motion.button
+              {/* <motion.button
                 onClick={() => navigate('/projects')}
                 className="mt-12 px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg text-xl font-bold 
                          hover:from-purple-500 hover:to-blue-500 transition-all duration-300
@@ -102,13 +102,13 @@ export function LandingPage() {
                 whileTap={{ scale: 0.95 }}
               >
                 View Projects
-              </motion.button>
+              </motion.button> */}
             </motion.div>
           </div>
         </section>
 
         {/* About Section */}
-        <section className="py-20 px-4 md:px-8">
+        <section className="px-4 md:px-8">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -159,12 +159,9 @@ export function LandingPage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    whileHover={{ scale: 1.05, y: -5 }}
-                    className="backdrop-blur-xl bg-white/5 rounded-2xl p-6 border border-white/10
-                             hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(139,92,246,0.3)]
-                             transition-all duration-300 cursor-pointer group"
+                    className="backdrop-blur-xl bg-white/5 rounded-2xl p-6 border border-white/10"
                   >
-                    <Icon className="w-10 h-10 mb-4 text-purple-400 group-hover:text-cyan-400 transition-colors duration-300" />
+                    <Icon className="w-10 h-10 mb-4 text-purple-400" />
                     <h3 className="font-bold text-lg text-white">{skill.name}</h3>
                   </motion.div>
                 );
@@ -196,9 +193,8 @@ export function LandingPage() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.2 }}
-                  className={`flex items-center mb-12 md:mb-16 ${
-                    index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                  } flex-col`}
+                  className={`flex items-center mb-12 md:mb-16 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
+                    } flex-col`}
                 >
                   <div className={`flex-1 ${index % 2 === 0 ? 'md:pr-12' : 'md:pl-12'}`}>
                     <div

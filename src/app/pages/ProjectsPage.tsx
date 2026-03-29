@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router';
 import { Home, ExternalLink, Gamepad2, Box, Layers } from 'lucide-react';
 import { AnimatedBackground } from '../components/AnimatedBackground';
 import mov from './video.mp4';
+import demo from './demo.mp4';
+import boardGameImg from '../../assets/board.png';
 
 interface Project {
   id: number;
@@ -11,7 +13,7 @@ interface Project {
   category: 'Game' | 'Rigging' | 'Unreal';
   videoUrl: string;
   thumbnail: string;
-  youtubeId: string;
+  youtubeId?: string;
 }
 
 export function ProjectsPage() {
@@ -82,10 +84,21 @@ export function ProjectsPage() {
       youtubeId: 'lARghrahYw4',
       thumbnail: `https://img.youtube.com/vi/lARghrahYw4/maxresdefault.jpg`,
     },
+    {
+      id: 9,
+      title: 'Board game',
+      category: 'Game',
+      videoUrl: 'https://www.therookies.co/projects/72985',
+      thumbnail: boardGameImg,
+    },
   ];
 
   const [selectedProject, setSelectedProject] = useState<Project>(projects[0]);
   const [filter, setFilter] = useState<'All' | 'Game' | 'Rigging' | 'Unreal'>('All');
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const filteredProjects =
     filter === 'All' ? projects : projects.filter((p) => p.category === filter);
@@ -113,6 +126,55 @@ export function ProjectsPage() {
         return 'from-cyan-500 to-purple-500';
       default:
         return 'from-purple-500 to-blue-500';
+    }
+  };
+
+  const getCategoryStyles = (category: string) => {
+    switch (category) {
+      case 'Game':
+        return {
+          border: 'border-blue-500',
+          hoverBorder: 'hover:border-blue-500/50',
+          shadow: 'shadow-[0_0_40px_rgba(59,130,246,0.5)]',
+          hoverShadow: 'hover:shadow-[0_0_30px_rgba(59,130,246,0.3)]',
+          icon: 'text-blue-400',
+          bg: 'bg-blue-500/20',
+          dot: 'bg-blue-500',
+          hoverText: 'group-hover:text-blue-300'
+        };
+      case 'Rigging':
+        return {
+          border: 'border-cyan-500',
+          hoverBorder: 'hover:border-cyan-500/50',
+          shadow: 'shadow-[0_0_40px_rgba(6,182,212,0.5)]',
+          hoverShadow: 'hover:shadow-[0_0_30px_rgba(6,182,212,0.3)]',
+          icon: 'text-cyan-400',
+          bg: 'bg-cyan-500/20',
+          dot: 'bg-cyan-500',
+          hoverText: 'group-hover:text-cyan-300'
+        };
+      case 'Unreal':
+        return {
+          border: 'border-purple-500',
+          hoverBorder: 'hover:border-purple-500/50',
+          shadow: 'shadow-[0_0_40px_rgba(168,85,247,0.5)]',
+          hoverShadow: 'hover:shadow-[0_0_30px_rgba(168,85,247,0.3)]',
+          icon: 'text-purple-400',
+          bg: 'bg-purple-500/20',
+          dot: 'bg-purple-500',
+          hoverText: 'group-hover:text-purple-300'
+        };
+      default:
+        return {
+          border: 'border-purple-500',
+          hoverBorder: 'hover:border-purple-500/50',
+          shadow: 'shadow-[0_0_40px_rgba(139,92,246,0.5)]',
+          hoverShadow: 'hover:shadow-[0_0_30px_rgba(139,92,246,0.3)]',
+          icon: 'text-purple-400',
+          bg: 'bg-purple-500/20',
+          dot: 'bg-purple-500',
+          hoverText: 'group-hover:text-purple-300'
+        };
     }
   };
 
@@ -145,6 +207,18 @@ export function ProjectsPage() {
         {/* Main Content */}
         <div className="px-4 md:px-8 py-8">
           <div className="max-w-7xl mx-auto">
+            <div className='mb-10 grid gap-4 grid-cols-1 md:grid-cols-2'>
+              <div className='relative rounded-xl overflow-hidden border border-white/30 bg-black/30'>
+                <video src={mov} muted loop className="w-full h-full" controls />
+                <div className='absolute inset-x-0 top-0 bg-black/70 px-4 py-3 text-center text-lg font-bold text-white'>Game Development</div>
+              </div>
+
+              <div className='relative rounded-xl overflow-hidden border border-white/30 bg-black/30'>
+                <video src={demo} muted loop className="w-full h-full" controls />
+                <div className='absolute inset-x-0 top-0 bg-black/70 px-4 py-3 text-center text-lg font-bold text-white'>Game Art</div>
+              </div>
+            </div>
+
             {/* Filter Buttons */}
             <motion.div
               initial={{ opacity: 0, y: -20 }}
@@ -165,10 +239,6 @@ export function ProjectsPage() {
               ))}
             </motion.div>
 
-            <div className='mb-10'>
-              <video src={mov} muted loop className="w-full h-full" controls />
-            </div>
-
             <div className="grid lg:grid-cols-2 gap-8">
               {/* Video Player - Left Side */}
               <motion.div
@@ -179,13 +249,21 @@ export function ProjectsPage() {
               >
                 <div className="backdrop-blur-xl bg-white/5 rounded-3xl p-4 md:p-6 border border-white/10 shadow-[0_0_50px_rgba(139,92,246,0.2)]">
                   <div className="aspect-video rounded-2xl overflow-hidden mb-4 bg-black/50">
-                    <iframe
-                      src={`https://www.youtube.com/embed/${selectedProject.youtubeId}`}
-                      title={selectedProject.title}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      className="w-full h-full"
-                    />
+                    {selectedProject.youtubeId ? (
+                      <iframe
+                        src={`https://www.youtube.com/embed/${selectedProject.youtubeId}`}
+                        title={selectedProject.title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="w-full h-full"
+                      />
+                    ) : (
+                      <img 
+                        src={selectedProject.thumbnail} 
+                        alt={selectedProject.title}
+                        className="w-full h-full object-cover"
+                      />
+                    )}
                   </div>
 
                   {/* Soundwave Animation */}
@@ -218,7 +296,8 @@ export function ProjectsPage() {
                       <div className="flex items-center gap-2">
                         {(() => {
                           const Icon = getCategoryIcon(selectedProject.category);
-                          return <Icon className="w-5 h-5 text-purple-400" />;
+                          const styles = getCategoryStyles(selectedProject.category);
+                          return <Icon className={`w-5 h-5 ${styles.icon}`} />;
                         })()}
                         <span
                           className={`px-3 py-1 rounded-full text-sm font-bold bg-gradient-to-r ${getCategoryColor(
@@ -242,7 +321,11 @@ export function ProjectsPage() {
                       whileTap={{ scale: 0.95 }}
                     >
                       <ExternalLink className="w-5 h-5" />
-                      <span className="hidden md:inline">Watch on YouTube</span>
+                      <span className="hidden md:inline">
+                        {selectedProject.videoUrl.includes('youtube.com') || selectedProject.videoUrl.includes('youtu.be') 
+                          ? 'Watch on YouTube' 
+                          : 'View Project'}
+                      </span>
                     </motion.a>
                   </div>
                 </div>
@@ -253,6 +336,7 @@ export function ProjectsPage() {
                 {filteredProjects.map((project, index) => {
                   const Icon = getCategoryIcon(project.category);
                   const isSelected = selectedProject.id === project.id;
+                  const styles = getCategoryStyles(project.category);
 
                   return (
                     <motion.div
@@ -260,11 +344,17 @@ export function ProjectsPage() {
                       initial={{ opacity: 0, x: 50 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
-                      onClick={() => setSelectedProject(project)}
+                      onClick={() => {
+                        if (!project.youtubeId) {
+                          window.open(project.videoUrl, '_blank', 'noopener noreferrer');
+                        } else {
+                          setSelectedProject(project);
+                        }
+                      }}
                       className={`backdrop-blur-xl bg-white/5 rounded-2xl p-4 border cursor-pointer
                                transition-all duration-300 group ${isSelected
-                          ? 'border-purple-500 shadow-[0_0_40px_rgba(139,92,246,0.5)] scale-[1.02]'
-                          : 'border-white/10 hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:scale-[1.01]'
+                          ? `${styles.border} ${styles.shadow} scale-[1.02]`
+                          : `border-white/10 ${styles.hoverBorder} ${styles.hoverShadow} hover:scale-[1.01]`
                         }`}
                       whileHover={{ y: -5 }}
                     >
@@ -276,8 +366,8 @@ export function ProjectsPage() {
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                           />
                           {isSelected && (
-                            <div className="absolute inset-0 bg-purple-500/20 flex items-center justify-center">
-                              <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                            <div className={`absolute inset-0 ${styles.bg} flex items-center justify-center`}>
+                              <div className={`w-8 h-8 ${styles.dot} rounded-full flex items-center justify-center`}>
                                 <div className="w-0 h-0 border-t-4 border-t-transparent border-l-6 border-l-white border-b-4 border-b-transparent ml-1" />
                               </div>
                             </div>
@@ -285,11 +375,11 @@ export function ProjectsPage() {
                         </div>
 
                         <div className="flex-1">
-                          <h3 className="text-xl font-black text-white mb-2 group-hover:text-purple-300 transition-colors">
+                          <h3 className={`text-xl font-black text-white mb-2 ${styles.hoverText} transition-colors`}>
                             {project.title}
                           </h3>
                           <div className="flex items-center gap-2">
-                            <Icon className="w-4 h-4 text-purple-400" />
+                            <Icon className={`w-4 h-4 ${styles.icon}`} />
                             <span
                               className={`px-2 py-1 rounded-full text-xs font-bold bg-gradient-to-r ${getCategoryColor(
                                 project.category
